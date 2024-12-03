@@ -1,0 +1,25 @@
+{
+  "name": "叮点跑腿",
+  "opName": "叮点跑腿后台管理系统",
+  "domain": "xxx.xxx.com",
+  "perfix": "http",
+  "serverPort": "8001",
+  "mysql": {
+    "host": "xxx.xxx.com",
+    "port": 3306,
+    "username": "xxx",
+    "password": "xxxxxx",
+    "database": "ddrunv2",
+    "synchronize": true,
+    "logging": false,
+    "charset": "utf8mb4"
+  },
+  "redis": {
+    "client": {
+      "port": 6379,
+      "host": "xxx.xxx.com",
+      "password": "xxxxxx",
+      "db": 0
+    }
+  }
+}

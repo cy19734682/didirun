@@ -1,0 +1,33 @@
+{
+  "name": "didirun",
+  "version": "2.0.0",
+  "description": "",
+  "private": true,
+  "dependencies": {
+    "@alicloud/pop-core": "^1.7.11",
+    "mysql": "^2.18.1",
+    "nanoid": "^3.3.1",
+    "pm2": "^5.2.0",
+    "request": "^2.88.2",
+    "xml-js": "^1.6.11"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "scripts": {
+    "start": "node init.js",
+    "server-install": "cd didirun-server && pnpm i ",
+    "server-build": "cd didirun-server && pnpm build ",
+    "server-start": "NODE_ENV=prod && pm2 restart ./ecosystem.config.js",
+    "admin-install": "cd didirun-admin && pnpm i",
+    "admin-build": "cd didirun-admin && pnpm build",
+    "server-exec": "cd didirun-server && pnpm i && pnpm build && NODE_ENV=prod && cd .. && pm2 restart ./ecosystem.config.js",
+    "admin-exec": "cd didirun-admin && pnpm i && pnpm build"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "",
+  "license": "GPL"
+}
