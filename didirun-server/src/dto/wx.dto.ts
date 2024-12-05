@@ -1,4 +1,5 @@
 import { PickDto, Rule, RuleType } from '@midwayjs/validate';
+import {SelectCommonDTO} from "./common.dto"
 
 export class WxSubscribeAddTemplateDTO {
   @Rule(RuleType.string().required())
@@ -20,13 +21,9 @@ export class WxSubscribeTmpKeyDTO extends PickDto(WxSubscribeAddTemplateDTO, [
   'tid',
 ]) {}
 
-export class WxGetpubtemplatetitlesDTO {
+export class WxGetpubtemplatetitlesDTO extends SelectCommonDTO {
   @Rule(RuleType.string().required())
   ids: string;
-  @Rule(RuleType.number().required())
-  start: number;
-  @Rule(RuleType.number().required())
-  limit: number;
 }
 
 export class WxSubscribeSendDTO {

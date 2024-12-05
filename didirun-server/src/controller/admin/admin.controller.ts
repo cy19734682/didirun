@@ -94,7 +94,7 @@ export class AdminController extends BaseController {
    * @returns
    */
   @Get('/verifycode')
-  async getVerifycode() {
+  async getVerifyCode() {
     const result = await this.adminService.getSvgCode();
     return this.responseSuccess('ok', result);
   }
@@ -107,6 +107,9 @@ export class AdminController extends BaseController {
     return this.responseSuccess('ok', this.adminService.getAdminInfo());
   }
 
+  /**
+   * 获取管理员信息(手机号未加密)
+   */
   @Get('/info/self', { middleware: [AdminMiddleware] })
   async infoSelf() {
     const adminInfo = this.ctx.adminInfo as AdminEntity;
@@ -148,6 +151,10 @@ export class AdminController extends BaseController {
     return this.responseSuccess('ok', result.raw);
   }
 
+  /**
+   * 管理员列表
+   * @param adminListDto
+   */
   @Get('/list', { middleware: [AdminMiddleware] })
   @Validate()
   async adminList(@Query() adminListDto: AdminListDTO) {
@@ -157,6 +164,10 @@ export class AdminController extends BaseController {
     );
   }
 
+  /**
+   * 修改管理员状态
+   * @param adminStatusDTO
+   */
   @Put('/status', { middleware: [AdminMiddleware] })
   @Validate()
   async status(@Body() adminStatusDTO: AdminStatusDTO) {
@@ -176,6 +187,10 @@ export class AdminController extends BaseController {
     return this.responseSuccess('修改状态成功');
   }
 
+  /**
+   * 添加管理员
+   * @param addDTO
+   */
   @Post('/add', { middleware: [AdminMiddleware] })
   @Validate()
   async add(@Body() addDTO: AdminDTO) {
@@ -202,6 +217,10 @@ export class AdminController extends BaseController {
     return this.responseSuccess('添加管理员成功');
   }
 
+  /**
+   * 修改管理员信息
+   * @param updateDTO
+   */
   @Put('/update', { middleware: [AdminMiddleware] })
   @Validate()
   async update(@Body() updateDTO: AdminUpdateDTO) {
@@ -240,6 +259,10 @@ export class AdminController extends BaseController {
     return this.returnUpdate(result);
   }
 
+  /**
+   * 修改密码
+   * @param dto
+   */
   @Put('/updatepwd', { middleware: [AdminMiddleware] })
   @Validate()
   async updatePwd(@Body() dto: AdminUpdatepwdDTO) {
@@ -288,6 +311,10 @@ export class AdminController extends BaseController {
     return this.responseSuccess('设置密码成功');
   }
 
+  /**
+   * 重置密码
+   * @param resetDTO
+   */
   @Put('/resetpwd', { middleware: [AdminMiddleware] })
   @Validate()
   async resetpwd(@Body() resetDTO: AdminResetPwdDTO) {

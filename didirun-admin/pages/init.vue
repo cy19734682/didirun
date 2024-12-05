@@ -129,8 +129,6 @@ export default Vue.extend({
             (this as any).$message.success('添加超级管理员成功！');
             this.$router.push('/login');
           }
-        } else {
-          return false;
         }
       });
     }

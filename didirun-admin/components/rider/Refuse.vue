@@ -15,37 +15,29 @@
 <script lang="ts">
 import Vue from 'vue';
 export default Vue.extend({
-  model: {
-    prop: 'visible',
-    event: 'change'
-  },
-  props: {
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    no: {
-      type: String,
-      default: ''
-    }
-  },
   data() {
     return {
+      visible: false,
       loading: false,
+      userNo: '',
       refuseReason: ''
     };
   },
   methods: {
+    open({userNo}){
+      this.userNo = userNo
+      this.refuseReason = ''
+      this.visible = true
+    },
     async handleOk() {
       this.loading = true;
       const res = await (this as any).$api.riderRefuse({
-        userNo: this.no,
+        userNo: this.userNo,
         refuseReason: this.refuseReason
       });
       this.loading = false;
       if (res.code === 200) {
         (this as any).$message.success('操作成功');
-        this.$emit('change', false);
         this.$emit('success');
       }
     }

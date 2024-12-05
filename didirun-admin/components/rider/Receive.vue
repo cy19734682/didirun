@@ -14,43 +14,33 @@
 <script lang="ts">
 import Vue from 'vue';
 export default Vue.extend({
-  model: {
-    prop: 'visible',
-    event: 'change'
-  },
-  props: {
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    no: {
-      type: String,
-      default: ''
-    },
-    type: {
-      type: String,
-      default: 'receive' // or send
-    }
-  },
   data() {
     return {
+      visible: false,
       loading: false,
-      riderNo: ''
+      riderNo: '',
+      orderNo: '',
+      type: 'receive' // receive  or send
     };
   },
   methods: {
+    open({ orderNo, type }) {
+      this.orderNo = orderNo;
+      this.type = type;
+      this.visible = true;
+    },
     async handleOk() {
       this.loading = true;
       const res = await (this as any).$api[
         this.type === 'receive' ? 'orderReceive' : 'orderDeliver'
       ]({
         riderNo: this.riderNo,
-        orderNo: this.no
+        orderNo: this.orderNo
       });
       this.loading = false;
       if (res.code === 200) {
         (this as any).$message.success(res.msg);
-        this.$emit('change', false);
+        this.visible = false;
         this.$emit('success');
       }
     }

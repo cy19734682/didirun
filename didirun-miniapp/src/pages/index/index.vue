@@ -52,7 +52,7 @@ export default {
     onShareTimeline(res) {
   	 //分享到朋友圈 by cckk263 
    const obj = {
-      title: "叮点跑腿",
+      title: "智速送达",
       path: "/pages/index/index",
     };
     const share = this.$store.state.home.share;
@@ -72,7 +72,7 @@ export default {
   },
   onShareAppMessage() {
     const obj = {
-      title: "叮点跑腿",
+      title: "智速送达",
       path: "/pages/index/index",
     };
     const share = this.$store.state.home.share;

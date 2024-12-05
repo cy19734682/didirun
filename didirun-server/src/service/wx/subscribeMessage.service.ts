@@ -117,10 +117,16 @@ export class WxSubscribeMessageService extends BaseService {
    * @param dto
    */
   async getPubTemplateTitleList(dto: WxGetpubtemplatetitlesDTO) {
+    const { current, pageSize, ...d } = dto;
+    const params = {
+      start: (current - 1) * pageSize,
+      limit: pageSize,
+      ...d,
+    };
     const token = await this.wxAppService.getAccessToken();
     const result = (await this.http.get(
       'https://api.weixin.qq.com/wxaapi/newtmpl/getpubtemplatetitles',
-      Object.assign(dto, {
+      Object.assign(params, {
         access_token: token,
       })
     )) as WxResult;

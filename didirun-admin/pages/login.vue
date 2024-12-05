@@ -2,7 +2,7 @@
   <div class="login-container">
     <div>
       <div class="flex flex-center item-center">
-        <Logo />
+        <img height="45px"  src="../assets/images/logo.png" alt="logo" />
         <div class="ml-20 fo-26 bold-500">{{ title }}</div>
       </div>
       <div class="login-content mt-40 flex flex-between item-start">
@@ -22,12 +22,10 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import Logo from '@/components/Logo.vue';
 import Account from '@/components/official/login/Account.vue';
 export default Vue.extend({
   name: 'Login',
   components: {
-    Logo,
     Account
   },
   data() {

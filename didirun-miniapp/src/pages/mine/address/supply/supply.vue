@@ -135,10 +135,10 @@
 								this.formData.province = map.data.province;
 								this.formData.city = map.data.city;
 								this.formData.district = map.data.district;
-								this.formData.streetNumber = map.data.street_number;
+								this.formData.streetNumber = map.data.street_number || '--';
 								this.formData.latitude = map.data.latitude;
 								this.formData.longitude = map.data.longitude;
-								this.formData.addressDetail = map.data.street_number
+								this.formData.addressDetail = map.data.street_number || '--'
 							}
 						} else{
 							uni.navigateTo({
@@ -161,7 +161,7 @@
 						this.formData.province = result.data.province;
 						this.formData.city = result.data.city;
 						this.formData.district = result.data.area;
-						this.formData.streetNumber = result.data.address_components.street_number;
+						this.formData.streetNumber = result.data.address_components.street_number || '--';
 						this.formData.addressDetail = result.data.details;
 						this.formData.latitude = result.data.location.lat;
 						this.formData.longitude = result.data.location.lng;

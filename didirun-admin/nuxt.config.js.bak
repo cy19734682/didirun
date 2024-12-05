@@ -50,7 +50,8 @@ export default {
     '@/components/base/index',
     '@/plugins/bus',
     '@/plugins/api',
-    '@/plugins/froala'
+    '@/plugins/froala',
+    '@/plugins/global'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

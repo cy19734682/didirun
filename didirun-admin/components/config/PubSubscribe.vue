@@ -1,87 +1,43 @@
 <template>
-  <div>
-    <a-table
-      class="mt-20"
-      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-      :row-key="rowKey"
-      :columns="columns"
-      :data-source="tableData"
-      :pagination="false"
-      :loading="loading"
-      bordered
-    >
-      <template slot="action" slot-scope="text">
-        <a-button type="link" @click="chooseTmp(text.tid, text.title)">选用</a-button>
-      </template>
-    </a-table>
-    <div class="mt-20 flex flex-end">
-      <a-pagination
-        v-model="query.current"
-        size="small"
-        :total="count"
-        :page-size="query.pageSize"
-        show-quick-jumper
-        :show-total="total => `共 ${total} 条数据`"
-        @change="pageChange"
-      />
-    </div>
-  </div>
+  <SearchTable
+    ref="searchTableRef"
+    :columns="columns"
+    api="wxSubscribeTitles"
+    row-key="tid"
+    :init-data="false"
+    :show-search-row="false"
+    :show-center-row="false"
+    style="padding: 0"
+  >
+    <template slot="action" slot-scope="{ text }">
+      <a-button type="link" @click="chooseTmp(text.tid, text.title)">选用</a-button>
+    </template>
+  </SearchTable>
 </template>
 <script lang="ts">
-import TableDataMixins from '@/plugins/mixins/table-data-mixin.vue';
-export default TableDataMixins.extend({
+import Vue from 'vue';
+export default Vue.extend({
   data() {
     return {
-      /* ---- 必要参数 start ---- */
-      query: {
-        current: 1,
-        pageSize: 10
-      },
       columns: [
-        { title: 'ID', key: 'tid', dataIndex: 'tid' },
-        { title: '标题', key: 'title', dataIndex: 'title' },
-        { title: '操作', key: 'id', scopedSlots: { customRender: 'action' } }
-      ],
-      rowKey: 'tid',
-
-      cates: [] as { id: number; name: string }[]
+        { title: 'ID', dataIndex: 'tid' },
+        { title: '标题', dataIndex: 'title' },
+        { title: '操作', width: 150, key: 'action', scopedSlots: { customRender: 'action' } }
+      ]
     };
   },
-  async mounted() {
-    await this.getCate();
-  },
   methods: {
+    init() {
+      this.getCate();
+    },
     async getCate() {
       const result = await (this as any).$api.wxSubscribeCate();
       if (result.code === 200) {
-        this.cates = result.data;
-        if(this.cates?.length > 0){
-          await this.getList();
+        const cates = result.data || [];
+        if (cates?.length > 0) {
+          this.$refs.searchTableRef.search({ ids: cates?.map(e => e.id)?.join(',') });
         }
       }
-    },
-    getTableData() {
-      // return;
-    },
-    async getList() {
-      this.loading = true;
-      const ids = [] as number[];
-      for (const item of this.cates) {
-        ids.push(item.id);
-      }
-      const result = await (this as any).$api.wxSubscribeTitles({
-        ids: ids.toString(),
-        start: (this.query.current - 1) * this.query.pageSize,
-        limit: this.query.pageSize
-      });
-      this.loading = false;
-      if (result.code === 200) {
-        this.tableData = result.data.data;
-        this.count = result.data.count;
-      }
-    },
-    pageChange() {
-      this.getList();
     },
     // 选用模板
     chooseTmp(tid: string, title: string) {

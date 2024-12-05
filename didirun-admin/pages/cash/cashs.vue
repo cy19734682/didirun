@@ -1,37 +1,17 @@
 <template>
-  <div class="home-container">
-    <div class="home-page-title">提现列表</div>
-    <Search class="mt-20" :options="searchOptions" @change="searchChange" />
-    <div class="flex flex-between item-center">
-      <div class="flex flex-start item-cencer">
-        <!-- <a-button type="primary" size="large" @click="$router.push('/rider/edit/add')"
-          >新增一位骑手</a-button
-        > -->
-      </div>
-      <div class="flex flex-end item-center">
-        <a-button size="large" icon="redo" :loading="loading" @click="getTableData()"> </a-button>
-      </div>
-    </div>
-    <a-table
-      class="mt-20"
-      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-      :row-key="rowKey"
+  <div>
+    <SearchTable
+      ref="searchTableRef"
+      title="提现列表"
+      :search-options="searchOptions"
       :columns="columns"
-      :data-source="tableData"
-      :pagination="false"
-      :loading="loading"
-      bordered
+      api="cashList"
+      row-key="cashNo"
     >
       <template slot="cashBy" slot-scope="text">
         <div v-if="text.cashBy === 'user'">用户</div>
         <div v-else-if="text.cashBy === 'rider'">骑手</div>
         <div v-else>代理</div>
-      </template>
-
-      <template slot="cashByNo" slot-scope="text">
-        <user-link v-if="text.cashBy === 'user'" :no="text.cashByNo"></user-link>
-        <rider-link v-else-if="text.cashBy === 'rider'" :no="text.cashByNo"></rider-link>
-        <agent-link v-else :no="text.cashByNo"></agent-link>
       </template>
 
       <template slot="amount" slot-scope="text">
@@ -62,35 +42,19 @@
           @click-item="actionClick($event, text)"
         />
       </template>
-    </a-table>
-    <div class="mt-20 flex flex-end">
-      <a-pagination
-        v-model="query.current"
-        size="small"
-        :total="count"
-        :page-size="query.pageSize"
-        show-quick-jumper
-        :show-total="total => `共 ${total} 条数据`"
-        @change="pageChange"
-      />
-    </div>
-    <CashRefuse v-model="updateVisible" :no="tempNo" @success="getTableData()" />
+    </SearchTable>
+    <CashRefuse ref="cashRefuseRef" @success="getTableData()" />
   </div>
 </template>
 <script lang="ts">
-import TableDataMixins from '~/plugins/mixins/table-data-mixin.vue';
-import RiderLink from '~/components/base/UserLink/RiderLink.vue';
+import Vue from 'vue';
 import CashRefuse from '~/components/rider/RefuseCash.vue';
-export default TableDataMixins.extend({
+export default Vue.extend({
   name: 'CashPage',
-  components: { RiderLink, CashRefuse },
+  components: { CashRefuse },
+  layout: 'global',
   data() {
     return {
-      /* ---- 必要参数 start ---- */
-      query: {
-        current: 1,
-        pageSize: 20
-      },
       searchOptions: [
         { key: 'bankName', type: 'text', label: '开户行' },
         { key: 'cardNo', type: 'text', label: '银行卡号' },
@@ -101,22 +65,19 @@ export default TableDataMixins.extend({
           type: 'select',
           label: '状态',
           options: [
-            { label: '状态：全部', value: '' },
             { label: '状态：提现成功', value: 1 },
             { label: '状态：待提现', value: 0 },
             { label: '状态：提现失败', value: -1 }
-          ],
-          optionsValue: ''
+          ]
         }
       ],
       columns: [
         {
           title: '编号',
-          key: 'cashNo',
           dataIndex: 'cashNo'
         },
         { title: '提现用户', key: 'cashBy', scopedSlots: { customRender: 'cashBy' } },
-        { title: '用户', key: 'cashByNo', scopedSlots: { customRender: 'cashByNo' } },
+        { title: '用户', dataIndex: 'cashByNo', scopedSlots: { customRender: 'cashByNo' } },
         {
           title: '提现金额',
           key: 'amount',
@@ -129,13 +90,8 @@ export default TableDataMixins.extend({
         },
         { title: '状态', key: 'status', scopedSlots: { customRender: 'status' } },
         { title: '时间', key: 'createTime', scopedSlots: { customRender: 'createTime' } },
-        { title: '操作', key: 'id', scopedSlots: { customRender: 'action' } }
-      ],
-      rowKey: 'cashNo',
-      api: 'cashList',
-
-      tempNo: '',
-      updateVisible: false
+        { title: '操作', key: 'action', scopedSlots: { customRender: 'action' } }
+      ]
     };
   },
 
@@ -163,15 +119,17 @@ export default TableDataMixins.extend({
           const result = await (this as any).$api.cashSuccess({ cashNo });
           if (result.code === 200) {
             (this as any).$message.success(result.msg);
-            this.getTableData();
+            this.$refs.searchTableRef.getTableData();
           }
         }
       });
     },
-    // 修改状态
+    // 体现失败
     updateFail(cashNo: string) {
-      this.tempNo = cashNo;
-      this.updateVisible = true;
+      this.$refs.cashRefuseRef.open({ cashNo });
+    },
+    getTableData() {
+      this.$refs.searchTableRef.getTableData();
     }
   }
 });

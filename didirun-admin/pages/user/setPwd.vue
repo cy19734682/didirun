@@ -83,8 +83,6 @@ export default Vue.extend({
             (this as any).$message.success(result.msg);
             this.$router.push('/');
           }
-        } else {
-          return false;
         }
       });
     }

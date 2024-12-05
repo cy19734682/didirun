@@ -4,7 +4,11 @@
     <div class="edit-content">
       <a-form-model ref="ruleForm" :model="formData" :rules="rules">
         <a-form-model-item label="优惠券名称" prop="couponName">
-          <a-input v-model="formData.couponName" :maxLength="45" placeholder="请输入优惠券名称"></a-input>
+          <a-input
+            v-model="formData.couponName"
+            :maxLength="45"
+            placeholder="请输入优惠券名称"
+          ></a-input>
         </a-form-model-item>
 
         <a-form-model-item prop="discountAmount">
@@ -45,7 +49,10 @@
         </a-form-model-item>
 
         <a-form-model-item label="有效天数" prop="deadlineDays">
-          <a-input-number v-model="formData.deadlineDays" placeholder="请输入有效天数"></a-input-number>
+          <a-input-number
+            v-model="formData.deadlineDays"
+            placeholder="请输入有效天数"
+          ></a-input-number>
           <div class="fo-9">领取后开始计算到期时间, -1为不限</div>
         </a-form-model-item>
 

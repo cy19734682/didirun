@@ -103,6 +103,7 @@ export class RiderController extends BaseController {
     const rider = await this.riderEntity.findOne({
       where: {
         userNo: this.ctx.userInfo.userNo,
+        status: 1,
       },
     });
     return this.responseSuccess('ok', !!rider);

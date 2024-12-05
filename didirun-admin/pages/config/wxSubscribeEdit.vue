@@ -13,7 +13,7 @@
         <div class="flex flex-start">
           <div class="subscribe-form-title fo-3">关键词</div>
           <div class="subscribe-form-content">
-            <a-input-search v-model="searchKey" placeholder="搜索关键字" @search="onSearch" />
+            <a-input-search v-model="searchKey" placeholder="搜索关键字" />
             <ScrollBar class="mt-8" max-height="170px">
               <a-spin :spinning="loading">
                 <div style="min-height: 170px">

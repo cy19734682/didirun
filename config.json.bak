@@ -1,6 +1,6 @@
 {
-  "name": "叮点跑腿",
-  "opName": "叮点跑腿后台管理系统",
+  "name": "智速送达",
+  "opName": "智速送达后台管理系统",
   "domain": "xxx.xxx.com",
   "perfix": "http",
   "serverPort": "8001",

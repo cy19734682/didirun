@@ -19,7 +19,7 @@ export class UserMiddleware implements IMiddleware<Context, NextFunction> {
       const verifyResult = await jwtService.verify(token);
       if (verifyResult.isExpried) {
         // 过期
-        throw new LoginError('回话过期，请重新登录');
+        throw new LoginError('会话过期，请重新登录');
       }
       if (!verifyResult.userId) {
         console.log('------用户校验失败------', verifyResult);

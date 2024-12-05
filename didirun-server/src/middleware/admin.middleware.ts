@@ -24,7 +24,7 @@ export class AdminMiddleware implements IMiddleware<Context, NextFunction> {
       };
       if (verifyResult.isExpried) {
         // 过期
-        throw new LoginError('回话过期，请重新登录');
+        throw new LoginError('会话过期，请重新登录');
       }
       if (!verifyResult.adminNo) {
         throw new DefaultError('校验失败');

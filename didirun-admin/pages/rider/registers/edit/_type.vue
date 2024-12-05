@@ -6,13 +6,24 @@
         <a-form-model-item label="用户" prop="realname">
           <ModalUser v-model="formData.userNo" />
         </a-form-model-item>
+        <a-form-model-item label="运营城市" prop="cityNo">
+          <ModalCity v-model="formData.cityNo" />
+        </a-form-model-item>
 
         <a-form-model-item label="真实姓名" prop="realname">
-          <a-input v-model="formData.realname" :maxLength="45" placeholder="请输入真实姓名"></a-input>
+          <a-input
+            v-model="formData.realname"
+            :maxLength="45"
+            placeholder="请输入真实姓名"
+          ></a-input>
         </a-form-model-item>
 
         <a-form-model-item label="身份证号码" prop="idCardNo">
-          <a-input v-model="formData.idCardNo" :maxLength="18" placeholder="请输入身份证号码"></a-input>
+          <a-input
+            v-model="formData.idCardNo"
+            :maxLength="18"
+            placeholder="请输入身份证号码"
+          ></a-input>
         </a-form-model-item>
 
         <a-form-model-item label="上传身份头像面照片" prop="avatarFaceImage">
@@ -47,6 +58,7 @@ export default EditMixin.extend({
     return {
       formData: {
         userNo: '',
+        cityNo: null,
         idCardNo: '',
         realname: '',
         avatarFaceImage: '',
@@ -55,6 +67,7 @@ export default EditMixin.extend({
       },
       rules: {
         userNo: [{ required: true, message: '请选择用户', trigger: 'blur' }],
+        cityNo: [{ required: true, message: '请选择运营城市', trigger: 'blur' }],
         idCardNo: [{ required: true, message: '请输入身份证号码', trigger: 'blur' }],
         realname: [{ required: true, message: '请输入真实姓名', trigger: 'blur' }],
         avatarFaceImage: [{ required: true, message: '请上传省份证照片面照片', trigger: 'blur' }],
@@ -65,17 +78,6 @@ export default EditMixin.extend({
   computed: {
     method(): string {
       return 'riderAdd';
-    }
-  },
-  mounted() {
-    const query = this.$route.query;
-    if (query.userNo) {
-      (this.formData as any).userNo = query.userNo as string;
-      this.formData.idCardNo = query.idCardNo as string;
-      this.formData.realname = query.realname as string;
-      this.formData.avatarFaceImage = query.avatarFaceImage as string;
-      this.formData.nationalFaceImage = query.nationalFaceImage as string;
-      this.formData.status = parseInt(query.status as string);
     }
   }
 });

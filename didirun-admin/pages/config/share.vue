@@ -45,7 +45,7 @@ export default EditMixin.extend({
   data() {
     return {
       formData: {
-        title: '叮点跑腿',
+        title: '智速送达',
         desc: '',
         path: '/pages/index/index',
         imageUrl: ''

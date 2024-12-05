@@ -9,6 +9,7 @@
       <a-button slot="enterButton" :loading="loading"> 查询 </a-button>
     </a-input-search>
     <div
+      v-show="Object.keys(userInfo).length > 0"
       class="user-content mt-8 flex flex-start item-center"
       :style="{ border: userInfo.userNo ? '1px solid #e1e1e1' : '1px solid rgba(0,0,0,0)' }"
     >

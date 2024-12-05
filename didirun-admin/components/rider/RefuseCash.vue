@@ -15,37 +15,29 @@
 <script lang="ts">
 import Vue from 'vue';
 export default Vue.extend({
-  model: {
-    prop: 'visible',
-    event: 'change'
-  },
-  props: {
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    no: {
-      type: String,
-      default: ''
-    }
-  },
   data() {
     return {
+      visible: false,
       loading: false,
+      cashNo: '',
       reason: ''
     };
   },
   methods: {
+    open({ cashNo }) {
+      this.cashNo = cashNo;
+      this.reason = '';
+      this.visible = true;
+    },
     async handleOk() {
       this.loading = true;
       const res = await (this as any).$api.cashFail({
-        cashNo: this.no,
+        cashNo: this.cashNo,
         reason: this.reason
       });
       this.loading = false;
       if (res.code === 200) {
         (this as any).$message.success('操作成功');
-        this.$emit('change', false);
         this.$emit('success');
       }
     }

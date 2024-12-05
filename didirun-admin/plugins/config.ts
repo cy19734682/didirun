@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { Color, MeshPhysicalMaterial, TextureLoader } from 'three';
 export const AutoSaveTime = 5 * 60 * 1000;
 // 项目截图路径
 export const ProjectScreenshot = 'project/screenshot/';

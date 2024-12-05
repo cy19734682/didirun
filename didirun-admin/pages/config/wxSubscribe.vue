@@ -1,15 +1,15 @@
 <template>
   <div class="home-container">
     <div class="home-page-title">订阅消息设置</div>
-    <a-tabs default-active-key="1">
-      <a-tab-pane key="1" tab="我的模板" force-render>
-        <MySubscribe />
+    <a-tabs v-model="rowKey" @change="tabChange">
+      <a-tab-pane key="mySubscribeRef" tab="我的模板" force-render>
+        <MySubscribe ref="mySubscribeRef" />
       </a-tab-pane>
-      <a-tab-pane key="2" tab="公共模板" force-render>
-        <PubSubscribe />
+      <a-tab-pane key="pubSubscribeRef" tab="公共模板" force-render>
+        <PubSubscribe ref="pubSubscribeRef" />
       </a-tab-pane>
-      <a-tab-pane key="3" tab="消息设置" force-render>
-        <SubscribeSetting />
+      <a-tab-pane key="subscribeSettingRef" tab="消息设置" force-render>
+        <SubscribeSetting ref="subscribeSettingRef" />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -28,9 +28,17 @@ export default Vue.extend({
   },
   layout: 'global',
   data() {
-    return {};
+    return {
+      rowKey: 'mySubscribeRef'
+    };
   },
-  mounted() {},
-  methods: {}
+  mounted() {
+    this.$refs.mySubscribeRef.init();
+  },
+  methods: {
+    tabChange() {
+      this.$refs[this.rowKey].init();
+    }
+  }
 });
 </script>

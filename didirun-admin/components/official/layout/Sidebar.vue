@@ -16,9 +16,9 @@
             <i class="iconfont icon-user-maner"></i>
             <span class="ml-8 bold">用户管理</span>
           </span>
-          <a-menu-item key="/user/agents"> 代理列表 </a-menu-item>
           <a-menu-item key="/user/admins"> 管理员列表 </a-menu-item>
           <a-menu-item key="/user/users"> 用户列表 </a-menu-item>
+          <a-menu-item key="/user/agents"> 代理列表 </a-menu-item>
         </a-sub-menu>
         <a-sub-menu key="order">
           <span slot="title">
@@ -93,7 +93,7 @@ import Vue from 'vue';
 export default Vue.extend({
   computed: {
     selectedKeys() {
-      return [this.$route.fullPath];
+      return [this.$route.fullPath?.split('?')?.[0] || ''];
     },
     defaultOpenKeys() {
       return [this.$route.fullPath?.split('/')?.[1] || '/'];

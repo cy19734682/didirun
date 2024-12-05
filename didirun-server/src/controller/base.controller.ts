@@ -65,6 +65,12 @@ export class BaseController {
     };
   }
 
+  /**
+   * 返回修改信息
+   * @param result
+   * @param msg
+   * @param data
+   */
   returnUpdate(result: UpdateResult, msg = '修改', data?: any) {
     if (result.affected === 0) {
       throw new DefaultError(msg + '失败');

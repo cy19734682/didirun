@@ -28,30 +28,6 @@ export default Vue.extend({
     OrderStatus,
     OrderLine
   },
-  layout: 'global',
-  data() {
-    return {};
-  },
-  computed: {
-    dates: {
-      get(): string[] {
-        return [this.$store.state.beginDate, this.$store.state.endDate];
-      },
-      set(val: string[]) {
-        this.$store.commit('setBeginDate', val[0]);
-        this.$store.commit('setEndDate', val[1]);
-      }
-    }
-  },
-  mounted() {
-    this.getData();
-  },
-  methods: {
-    dateChange() {
-      this.getData();
-    },
-    getData() {}
-  }
+  layout: 'global'
 });
 </script>
-<style lang="less" scoped></style>

@@ -119,6 +119,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      subscribes: [],
       formData: {
         orderTempId: '',
         verifyTempId: '',
@@ -144,20 +145,21 @@ export default Vue.extend({
       loading: false
     };
   },
-  computed: {
-    subscribes(): any[] {
-      return this.$store.state.subscribe.mySubscribes;
-    }
-  },
-
-  mounted() {
-    this.getauth();
-  },
   methods: {
-    async getauth() {
+    init(){
+      this.getAuth();
+      this.fetchMySubscribe();
+    },
+    async getAuth() {
       const result = await (this as any).$api.adminNoticeGet();
       if (result.code === 200 && result.data) {
         this.formData = Object.assign(this.formData, result.data);
+      }
+    },
+    async fetchMySubscribe() {
+      const res = (await (this as any).$api.wxSubscribeTemplates()) as any;
+      if (res.code === 200) {
+        this.subscribes = res.data || [];
       }
     },
     submit() {
@@ -188,8 +190,6 @@ export default Vue.extend({
           if (result.code === 200) {
             (this as any).$message.success(result.msg);
           }
-        } else {
-          return false;
         }
       });
     }

@@ -149,8 +149,6 @@ export default Vue.extend({
           if (result.code === 200) {
             (this as any).$message.success(result.msg);
           }
-        } else {
-          return false;
         }
       });
     }

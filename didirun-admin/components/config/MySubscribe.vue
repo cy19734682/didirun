@@ -1,67 +1,37 @@
 <template>
-  <div>
-    <a-table
-      class="mt-20"
-      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-      :row-key="rowKey"
-      :columns="columns"
-      :data-source="subscribes"
-      :pagination="false"
-      :loading="loading"
-      bordered
-    >
-      <template slot="priTmplId" slot-scope="text">
-        <div style="width: 150px">{{ text.priTmplId }}</div>
-      </template>
-      <template slot="title" slot-scope="text">
-        <div style="width: 150px">{{ text.title }}</div>
-      </template>
-      <template slot="content" slot-scope="text">
-        <p style="white-space: pre-wrap; width: 250px">{{ text.content }}</p>
-      </template>
-      <template slot="example" slot-scope="text">
-        <p style="white-space: pre-wrap; width: 250px">{{ text.example }}</p>
-      </template>
-      <template slot="action" slot-scope="text">
-        <Action
-          :options="[{ label: '删除', key: 'del' }]"
-          @click-item="actionClick($event, text)"
-        />
-      </template>
-    </a-table>
-  </div>
+  <SearchTable
+    ref="searchTableRef"
+    :columns="columns"
+    api="wxSubscribeTemplates"
+    row-key="priTmplId"
+    :init-data="false"
+    :show-search-row="false"
+    :show-center-row="false"
+    :show-page="false"
+    style="padding: 0"
+  >
+    <template slot="action" slot-scope="{ text }">
+      <Action :options="[{ label: '删除', key: 'del' }]" @click-item="actionClick($event, text)" />
+    </template>
+  </SearchTable>
 </template>
 <script lang="ts">
-import TableDataMixins from '@/plugins/mixins/table-data-mixin.vue';
-export default TableDataMixins.extend({
+import Vue from 'vue';
+export default Vue.extend({
   data() {
     return {
-      /* ---- 必要参数 start ---- */
-      query: {},
       columns: [
-        {
-          title: 'tmpID',
-          key: 'priTmplId',
-          scopedSlots: { customRender: 'priTmplId' }
-        },
-        { title: '标题', key: 'title', scopedSlots: { customRender: 'title' } },
-        { title: '说明', key: 'content', scopedSlots: { customRender: 'content' } },
-        { title: '示例', key: 'example', scopedSlots: { customRender: 'example' } },
-        { title: '操作', key: 'id', scopedSlots: { customRender: 'action' } }
-      ],
-      rowKey: 'priTmplId'
+        { title: 'tmpID', dataIndex: 'priTmplId', width: 250 },
+        { title: '标题', dataIndex: 'title', width: 250 },
+        { title: '说明', dataIndex: 'content' },
+        { title: '示例', dataIndex: 'example' },
+        { title: '操作', width: 150, key: 'action', scopedSlots: { customRender: 'action' } }
+      ]
     };
   },
-  computed: {
-    subscribes() {
-      return this.$store.state.subscribe.mySubscribes;
-    }
-  },
   methods: {
-    async getTableData() {
-      this.loading = true;
-      await this.$store.dispatch('subscribe/fetchMySubscribe');
-      this.loading = false;
+    init() {
+      this.$refs.searchTableRef.getTableData();
     },
     // 操作点击
     actionClick(obj: { key: string; value: any }, text: any) {
@@ -82,7 +52,7 @@ export default TableDataMixins.extend({
           const result = await (this as any).$api.wxSubscribeDel({ priTmplId });
           if (result.code === 200) {
             (this as any).$message.success('删除成功');
-            this.getTableData();
+            this.$refs.searchTableRef.getTableData();
           }
         }
       });

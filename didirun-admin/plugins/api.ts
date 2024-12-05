@@ -95,6 +95,7 @@ const api = {
   riderPass: (data: any) => http.put('/admin/rider/pass', data),
   riderRefuse: (data: any) => http.put('/admin/rider/refuse', data),
   riderReceiveSet: (data: any) => http.put('/admin/rider/receive/status', data),
+  riderStatus: (data: any) => http.put('/admin/rider/status', data),
 
   wxSubscribeAdd: (data: any) => http.post('/admin/wx/subscribe/message/addtemplate', data),
   wxSubscribeDel: (data: any) => http.post('/admin/wx/subscribe/message/deltemplate', data),

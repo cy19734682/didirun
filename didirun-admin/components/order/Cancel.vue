@@ -19,23 +19,11 @@
 <script lang="ts">
 import Vue from 'vue';
 export default Vue.extend({
-  model: {
-    prop: 'visible',
-    event: 'change'
-  },
-  props: {
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    no: {
-      type: String,
-      default: ''
-    }
-  },
   data() {
     return {
+      visible: false,
       loading: false,
+      orderNo: '',
       cancelReason: '',
       reasons: []
     };
@@ -44,6 +32,11 @@ export default Vue.extend({
     this.getAdminConfig();
   },
   methods: {
+    open({ orderNo }) {
+      this.orderNo = orderNo;
+      this.cancelReason = '';
+      this.visible = true;
+    },
     async getAdminConfig() {
       const res = await (this as any).$api.adminCancelOrderGet();
       if (res.code === 200 && res.data) {
@@ -57,13 +50,12 @@ export default Vue.extend({
       }
       this.loading = true;
       const res = await (this as any).$api.orderCancel({
-        orderNo: this.no,
+        orderNo: this.orderNo,
         cancelReason: this.cancelReason
       });
       this.loading = false;
       if (res.code === 200) {
         (this as any).$message.success(res.msg);
-        this.$emit('change', false);
         this.$emit('success');
       }
     }

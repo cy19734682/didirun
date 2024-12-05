@@ -46,11 +46,23 @@ export class RiderListDTO extends SelectCommonDTO {
   realname?: string;
   @Rule(RuleType.string())
   riderNo?: string;
+  @Rule(RuleType.string())
+  userNo?: string;
+  @Rule(RuleType.number())
+  status?: 0 | 1;
 }
 
 export class RiderReceiveDTO {
   @Rule(RuleType.boolean().required())
   startReceive: boolean;
+
+  @Rule(RuleType.string().required())
+  riderNo: string;
+}
+
+export class RiderStatusDTO {
+  @Rule(RuleType.number().required())
+  status: 0 | 1;
 
   @Rule(RuleType.string().required())
   riderNo: string;

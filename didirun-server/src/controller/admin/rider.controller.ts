@@ -14,6 +14,7 @@ import {
   RiderReceiveDTO,
   RiderRefuseDTO,
   RiderRegisterListDTO,
+  RiderStatusDTO,
   SimulationRiderAddDTO,
 } from '../../dto/rider.dto';
 import { DefaultError } from '../../error/default.error';
@@ -57,6 +58,9 @@ export class AdminRiderController extends BaseController {
         throw new DefaultError('添加失败');
       }
     } else {
+      if (find.status === 1) {
+        throw new DefaultError('该用户已通过审核，无需重复提交');
+      }
       const registerUpdate = await this.riderService.riderRegisterEntity.update(
         {
           userNo: dto.userNo,
@@ -178,7 +182,7 @@ export class AdminRiderController extends BaseController {
     const fields = 'rs.*,rr.realname,u.mobileNumber,u.avatarUrl,u.nickName';
     let wheres = 'rr.userNo = u.userNo and rs.userNo = u.userNo';
     if (dto.idCardNo) {
-      wheres += ` and rr.icCardNo="${dto.idCardNo}"`;
+      wheres += ` and rr.idCardNo="${dto.idCardNo}"`;
     }
     if (dto.mobileNumber) {
       wheres += ` and u.mobileNumber like "%${dto.mobileNumber}%"`;
@@ -188,6 +192,12 @@ export class AdminRiderController extends BaseController {
     }
     if (dto.riderNo) {
       wheres += ` and rs.riderNo="${dto.riderNo}"`;
+    }
+    if (dto.userNo) {
+      wheres += ` and rs.userNo="${dto.userNo}"`;
+    }
+    if (dto.status !== undefined) {
+      wheres += ` and rs.status="${dto.status}"`;
     }
     const result = await this.queryService.select(
       this.riderService.riderEntity,
@@ -201,6 +211,26 @@ export class AdminRiderController extends BaseController {
       }
     );
     return this.responseSuccess('ok', result);
+  }
+
+  /**
+   * 更改骑手状态
+   */
+  @Put('/status')
+  @Validate()
+  async riderStatus(@Body() dto: RiderStatusDTO) {
+    const result = await this.riderService.riderEntity.update(
+      {
+        riderNo: dto.riderNo,
+      },
+      {
+        status: dto.status,
+      }
+    );
+    if (result.affected === 0) {
+      throw new DefaultError('更改状态失败');
+    }
+    return this.responseSuccess('更改状态成功');
   }
 
   /**

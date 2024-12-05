@@ -25,11 +25,13 @@
                 show-search
                 style="width: 100%"
                 placeholder="请选择"
+                option-filter-prop="name"
               >
                 <a-select-option
                   v-for="(item1, index1) in coupons"
                   :key="index1"
                   :value="item1.couponNo"
+                  :name="item.couponName"
                 >
                   {{ item1.couponName }}
                 </a-select-option>
@@ -78,11 +80,13 @@
                 show-search
                 style="width: 100%"
                 placeholder="请选择"
+                option-filter-prop="name"
               >
                 <a-select-option
                   v-for="(item1, index1) in coupons"
                   :key="index1"
                   :value="item1.couponNo"
+                  :name="item1.couponName"
                 >
                   {{ item1.couponName }}
                 </a-select-option>

@@ -71,8 +71,6 @@ export default EditMixin.extend({
             (this as any).$message.success(result.msg);
             this.$store.dispatch('profile/fetchUserInfo');
           }
-        } else {
-          return false;
         }
       });
     }
