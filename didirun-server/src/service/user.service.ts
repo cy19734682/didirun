@@ -29,7 +29,8 @@ export class UserService extends BaseService {
   }
 
   getUserInfo(user?: UserEntity) {
-    const userInfo = user || (this.ctx.userInfo as UserEntity);
+    const userInfo: UserEntity & { isRider?: boolean } =
+      user || (this.ctx.userInfo as UserEntity);
     return {
       avatarUrl: userInfo.avatarUrl,
       nickName: userInfo.nickName,
@@ -39,13 +40,14 @@ export class UserService extends BaseService {
       city: userInfo.city,
       area: userInfo.area,
       gender: userInfo.gender,
+      isRider: userInfo.isRider,
     };
   }
 
   getUnshowMobile(mobileNumber?: string) {
     const mobile = mobileNumber || this.ctx.userInfo.mobileNumber;
     const split = mobile.split('');
-    const str =
+    return (
       split[0] +
       split[1] +
       split[2] +
@@ -53,8 +55,8 @@ export class UserService extends BaseService {
       split[7] +
       split[8] +
       split[9] +
-      split[10];
-    return str;
+      split[10]
+    );
   }
 
   async findByOpenid(wxOpenid: string) {
@@ -113,7 +115,7 @@ export class UserService extends BaseService {
   }
 
   async add(countryCode: string, mobileNumber: string) {
-    return new Promise((resolve: Function) => {
+    return new Promise<InsertResult>(resolve => {
       this.userModel
         .insert({
           countryCode,

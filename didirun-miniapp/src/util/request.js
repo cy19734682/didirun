@@ -1,4 +1,5 @@
 import { API } from "./constant.js";
+import store from "../store";
 
 export const request = async (url, data, method, needNo = true) => {
   const provider = await getProviderSync();
@@ -109,7 +110,7 @@ export const login = () => {
               if (result.code === 200) {
                 uni.setStorageSync("wxappNo", result.data.wxappNo);
                 if (result.data.user) {
-                  uni.setStorageSync("userInfo", result.data.user);
+                  store.commit("auth/setUserInfo", result.data.user);
                 }
                 resolve(result.data.wxappNo);
               } else {
@@ -126,7 +127,7 @@ export const login = () => {
               if (result.code === 200) {
                 uni.setStorageSync("aliappNo", result.data.aliappNo);
                 if (result.data.user) {
-                  uni.setStorageSync("userInfo", result.data.user);
+                  store.commit("auth/setUserInfo", result.data.user);
                 }
                 resolve(result.data.aliappNo);
               } else {
@@ -143,7 +144,7 @@ export const login = () => {
               if (result.code === 200) {
                 uni.setStorageSync("qqappNo", result.data.qqappNo);
                 if (result.data.user) {
-                  uni.setStorageSync("userInfo", result.data.user);
+                  store.commit("auth/setUserInfo", result.data.user);
                 }
                 resolve(result.data.qqappNo);
               } else {
@@ -160,7 +161,7 @@ export const login = () => {
               if (result.code === 200) {
                 uni.setStorageSync("ttappNo", result.data.ttappNo);
                 if (result.data.user) {
-                  uni.setStorageSync("userInfo", result.data.user);
+                  store.commit("auth/setUserInfo", result.data.user);
                 }
                 resolve(result.data.ttappNo);
               } else {
@@ -179,7 +180,7 @@ export const login = () => {
 export const info = async () => {
   const res = await $get("user/info");
   if (res.code === 200) {
-    uni.setStorageSync("userInfo", res.data);
+    store.commit("auth/setUserInfo", result.data.user);
   }
 };
 

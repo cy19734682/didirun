@@ -8,7 +8,9 @@ import { QQService } from '../../service/qq/qq.service';
 import { ToutiaoService } from '../../service/toutiao/toutiao.service';
 import { UserService } from '../../service/user.service';
 import { WxappService } from '../../service/wxapp.service';
+import { RiderService } from '../../service/rider.service';
 import { BaseController } from '../base.controller';
+import { UserEntity } from '../../entity/user.entity';
 
 @Controller('/api/user')
 export class UserController extends BaseController {
@@ -26,6 +28,9 @@ export class UserController extends BaseController {
 
   @Inject()
   toutiaoService: ToutiaoService;
+
+  @Inject()
+  riderService: RiderService;
 
   @Post('/update', { middleware: [AppMiddleware] })
   @Validate()
@@ -54,7 +59,8 @@ export class UserController extends BaseController {
     // 验证短信
     await this.smsService.doVerifyCode(dto.verifyCode, dto.mobileNumber);
     // 查询用户
-    let mobileUser = await this.userService.findByMobile(dto.mobileNumber);
+    let mobileUser: UserEntity & { isRider?: boolean } =
+      await this.userService.findByMobile(dto.mobileNumber);
     if (!mobileUser) {
       await this.userService.add('86', dto.mobileNumber);
       mobileUser = await this.userService.findByMobile(dto.mobileNumber);
@@ -66,6 +72,10 @@ export class UserController extends BaseController {
       if (mobileUser.status !== 1) {
         throw new DefaultError('该用户已被禁用，请联系管理员！');
       }
+      // 查询用户是否是骑手
+      mobileUser.isRider = !!(await this.riderService.isRider(
+        mobileUser.userNo
+      ));
       if (wxappNo) {
         const update = await this.wxappService.wxappEntity.update(
           {

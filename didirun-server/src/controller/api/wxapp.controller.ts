@@ -20,7 +20,9 @@ import { HttpService } from '../../service/http.service';
 import { JWTService } from '../../service/jwt.service';
 import { UserService } from '../../service/user.service';
 import { WxappService } from '../../service/wxapp.service';
+import { RiderService } from '../../service/rider.service';
 import { BaseController } from '../base.controller';
+import { UserEntity } from '../../entity/user.entity';
 
 @Controller('/api/wxapp')
 export class WxappController extends BaseController {
@@ -44,6 +46,9 @@ export class WxappController extends BaseController {
 
   @Inject()
   couponService: CouponService;
+
+  @Inject()
+  riderService: RiderService;
 
   @Get('/login')
   async login(@Query() loginDTO: WxappLoginDTO) {
@@ -81,8 +86,11 @@ export class WxappController extends BaseController {
       return this.responseSuccess('ok', wxappNo);
     }
     if (findRes.userNo) {
-      const user = await this.userService.findByNo(findRes.userNo);
+      const user: UserEntity & { isRider?: boolean } =
+        await this.userService.findByNo(findRes.userNo);
       if (user) {
+        // 查询用户是否是骑手
+        user.isRider = !!(await this.riderService.isRider(user.userNo));
         return this.responseSuccess('ok', {
           wxappNo: findRes.wxappNo,
           user: this.userService.getUserInfo(user),
@@ -106,9 +114,8 @@ export class WxappController extends BaseController {
       throw new LoginError('用户不存在');
     }
     const result = await this.wxappService.getUserPhoneNumber(loginDTO.code);
-    let user = await this.userService.findByMobile(
-      result.phone_info.purePhoneNumber
-    );
+    let user: UserEntity & { isRider?: boolean } =
+      await this.userService.findByMobile(result.phone_info.purePhoneNumber);
     if (!user) {
       await this.userService.add(
         result.phone_info.countryCode,
@@ -131,6 +138,10 @@ export class WxappController extends BaseController {
         userNo: user.userNo,
       }
     );
+    if (user) {
+      // 查询用户是否是骑手
+      user.isRider = !!(await this.riderService.isRider(user.userNo));
+    }
     return this.responseSuccess('ok', this.userService.getUserInfo(user));
   }
 }

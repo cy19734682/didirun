@@ -1,4 +1,5 @@
 export const API = 'http://127.0.0.1:8001/api/';
+// export const API = 'https://www.cy1973.cn:3045/api/';
 //帮我送
 export const HELP_DELIVER = 'helpDeliver';
 //帮我取

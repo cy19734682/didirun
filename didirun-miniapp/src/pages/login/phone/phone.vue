@@ -36,6 +36,11 @@
 				showCode: false
 			}
 		},
+    computed: {
+      isRider() {
+        return this.$store.state.auth.userVersion === "rider";
+      },
+    },
 		beforeDestroy(){
 			this.clearIntv()
 		},
@@ -81,9 +86,11 @@
 				if(result.code === 200){
 					this.clearIntv();
           this.$store.commit("auth/setUserInfo", result.data.user);
-					uni.navigateBack({
-						delta: 1
-					})
+          uni.reLaunch({
+            url: !this.isRider
+                ? "/pages/index/index"
+                : "/pages/rider/order/order",
+          });
 				}
 			},
 			async getCode() {

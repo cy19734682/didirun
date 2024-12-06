@@ -102,4 +102,17 @@ export class RiderService extends BaseService {
         100,
     };
   }
+
+  /**
+   * 是否是骑手（返回布尔值）
+   * @param userNo
+   */
+  async isRider(userNo: string) {
+    return await this.riderEntity.findOne({
+      where: {
+        userNo: userNo,
+        status: 1,
+      },
+    });
+  }
 }

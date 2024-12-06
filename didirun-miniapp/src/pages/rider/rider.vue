@@ -51,6 +51,18 @@
         </view>
         <view class="iconfont icon-arrow-right fo-28 fo-9"> </view>
       </navigator>
+      <navigator
+          class="p-30 flex flex-between item-center"
+          :url="
+          provider === 'qq' ? '/pages/login/phone/phone' : '/pages/login/login'
+        "
+      >
+        <view class="flex flex-start item-center">
+          <view class="iconfont icon-change-user fo-28"> </view>
+          <view class="ml-30 fo-28"> 切换手机号 </view>
+        </view>
+        <view class="iconfont icon-arrow-right fo-28 fo-9"> </view>
+      </navigator>
     </dd-card>
 
     <dd-card margin="30rpx 0 0 0">
@@ -77,7 +89,7 @@
     </dd-card>
 
     <dd-card margin="30rpx 0 0 0">
-      <navigator
+      <view
         class="p-30 flex flex-between item-center"
         @click="changeToUser"
       >
@@ -88,7 +100,7 @@
           </view>
         </view>
         <view class="iconfont icon-arrow-right fo-28 fo-9"> </view>
-      </navigator>
+      </view>
     </dd-card>
   </view>
 </template>
@@ -104,6 +116,7 @@ export default {
       todayTotal: 0,
       monthTotal: 0,
       allTotal: 0,
+      provider: uni.getStorageSync("provider"),
     };
   },
   computed: {
@@ -131,13 +144,8 @@ export default {
     changeToUser() {
       const isRider = this.userVersion === "rider";
       this.$store.commit("auth/setUserVersion", isRider ? "user" : "rider");
-      uni.navigateBack({
-        delta: 1,
-        success() {
-          uni.redirectTo({
-            url: isRider ? "/pages/index/index" : "/pages/rider/order/order",
-          });
-        },
+      uni.reLaunch({
+        url: isRider ? "/pages/index/index" : "/pages/rider/order/order",
       });
     },
   },

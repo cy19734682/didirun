@@ -91,10 +91,18 @@ export default {
     return obj;
   },
   async onLoad() {
+    // #ifdef MP-WEIXIN
+    if(wx.hideHomeButton){
+      await wx.hideHomeButton();
+    }
+    if(wx.canIUse('hideHomeButton')) {
+      await wx.hideHomeButton();
+    }
+    // #endif
     // 是否是骑手版
     const isRiderVersion = this.userVersion === "rider";
     if (isRiderVersion) {
-      uni.redirectTo({
+      uni.reLaunch({
         url: "/pages/rider/order/order",
       });
       return;

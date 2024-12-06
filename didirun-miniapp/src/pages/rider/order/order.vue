@@ -69,8 +69,16 @@ export default {
       isLoad: false,
     };
   },
-  onLoad() {
-    this.getList();
+  async onLoad() {
+    // #ifdef MP-WEIXIN
+    if (wx.hideHomeButton) {
+      await wx.hideHomeButton();
+    }
+    if (wx.canIUse("hideHomeButton")) {
+      await wx.hideHomeButton();
+    }
+    // #endif
+    await this.getList();
   },
   onShow() {
     if (this.isLoad) {
@@ -111,21 +119,17 @@ export default {
           if (loc.errMsg === "getLocation:ok") {
             hasPos = true;
             try {
-                uni.setStorageSync('lastLatitude', loc.latitude);
-                uni.setStorageSync('lastLongitude', loc.longitude);
-            }
-            catch (e) {
-                
-            }
+              uni.setStorageSync("lastLatitude", loc.latitude);
+              uni.setStorageSync("lastLongitude", loc.longitude);
+            } catch (e) {}
           } else {
-              try {
-                  loc.latitude = uni.getStorageSync('lastLatitude');
-                  loc.longitude = uni.getStorageSync('lastLongitude');
-                  hasPos = true;
-              }
-              catch (e) {
-                hasPos = false;
-              }
+            try {
+              loc.latitude = uni.getStorageSync("lastLatitude");
+              loc.longitude = uni.getStorageSync("lastLongitude");
+              hasPos = true;
+            } catch (e) {
+              hasPos = false;
+            }
           }
           if (hasPos) {
             uni.showLoading({
@@ -138,7 +142,7 @@ export default {
               latitude: loc.latitude,
               longitude: loc.longitude,
             };
-            
+
             const res = await $get(
               "order/list/rider",
               Object.assign(this.query, latlng)

@@ -100,7 +100,7 @@
         </view>
         <view class="iconfont icon-arrow-right fo-28 fo-9"> </view>
       </navigator>
-      <navigator
+      <view
         v-if="isRider"
         class="p-30 flex flex-between item-center"
         @click="changeVersion"
@@ -112,7 +112,7 @@
           </view>
         </view>
         <view class="iconfont icon-arrow-right fo-28 fo-9"> </view>
-      </navigator>
+      </view>
     </dd-card>
   </view>
 </template>
@@ -122,7 +122,6 @@ import { $get, post, info } from "@/util/request.js";
 export default {
   data() {
     return {
-      isRider: false, //是否是骑手
       coupon: 0, //优惠券
       intergral: 0, //积分
       provider: uni.getStorageSync("provider"),
@@ -135,12 +134,12 @@ export default {
     userVersion() {
       return this.$store.state.auth.userVersion || "user";
     },
+    isRider() {
+      return this.$store.state.auth.isRider || false;
+    },
   },
   onLoad() {
     this.getCounpon();
-  },
-  onShow() {
-    this.getIsRider();
   },
   methods: {
     async getCounpon() {
@@ -150,12 +149,6 @@ export default {
       if (res.code === 200) {
         this.intergral = res.data.intergralCount;
         this.coupon = res.data.couponCount;
-      }
-    },
-    async getIsRider() {
-      const res = await $get("rider/isRider");
-      if (res.code === 200) {
-        this.isRider = res.data;
       }
     },
     getUserProfile() {
@@ -182,13 +175,8 @@ export default {
     changeVersion() {
       const isRider = this.userVersion === "rider";
       this.$store.commit("auth/setUserVersion", isRider ? "user" : "rider");
-      uni.navigateBack({
-        delta: 1,
-        success() {
-          uni.redirectTo({
-            url: isRider ? "/pages/index/index" : "/pages/rider/order/order",
-          });
-        },
+      uni.reLaunch({
+        url: isRider ? "/pages/index/index" : "/pages/rider/order/order",
       });
     },
   },

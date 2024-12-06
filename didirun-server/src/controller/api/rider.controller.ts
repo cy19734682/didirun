@@ -100,12 +100,7 @@ export class RiderController extends BaseController {
    */
   @Get('/isRider')
   async isRider() {
-    const rider = await this.riderEntity.findOne({
-      where: {
-        userNo: this.ctx.userInfo.userNo,
-        status: 1,
-      },
-    });
+    const rider = await this.riderService.isRider(this.ctx.userInfo.userNo);
     return this.responseSuccess('ok', !!rider);
   }
 

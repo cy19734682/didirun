@@ -35,6 +35,11 @@ export default {
       provider: uni.getStorageSync("provider"),
     };
   },
+  computed: {
+    isRider() {
+      return this.$store.state.auth.userVersion === "rider";
+    },
+  },
   methods: {
     redrictToPhone() {
       uni.redirectTo({
@@ -51,8 +56,10 @@ export default {
           });
           if (result.code === 200) {
             this.$store.commit("auth/setUserInfo", result.data);
-            uni.navigateBack({
-              delta: 1,
+            uni.reLaunch({
+              url: !this.isRider
+                ? "/pages/index/index"
+                : "/pages/rider/order/order",
             });
           }
         } else if (provider === "alipay") {
@@ -63,8 +70,10 @@ export default {
           });
           if (result.code === 200) {
             this.$store.commit("auth/setUserInfo", result.data);
-            uni.navigateBack({
-              delta: 1,
+            uni.reLaunch({
+              url: !this.isRider
+                ? "/pages/index/index"
+                : "/pages/rider/order/order",
             });
           }
         } else if (provider === "toutiao") {
