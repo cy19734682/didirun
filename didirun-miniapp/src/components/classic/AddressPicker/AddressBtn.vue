@@ -2,11 +2,11 @@
 	<view class="address-item">
 		<view v-if="type === 'radio'" class="flex flex-center item-center">
 			<view :class="['radio-tag mr-24', buyStyle === 'nearby' ? 'radio-tag--active':'']"
-				@click="changeRadio('nearby')">
+				@click="setBuyStyle('nearby')">
 				就近购买
 			</view>
 			<view :class="['radio-tag', buyStyle === 'appoint' ? 'radio-tag--active':'']"
-				@click="changeRadio('appoint')">
+				@click="setBuyStyle('appoint')">
 				指定地点购买
 			</view>
 		</view>
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+  import { mapGetters, mapMutations } from "vuex";
 	export default {
 		props: {
 			borderT: {
@@ -70,19 +71,14 @@
 				default: 'start' // end
 			}
 		},
-
 		computed: {
-			buyStyle() {
-				return this.$store.state.home.buyStyle
-			},
+      ...mapGetters(["buyStyle"]),
 			buyPlaceholder() {
 				return this.buyStyle === 'nearby' ? '就近购买' : '请指定一个地址购买'
 			}
 		},
 		methods: {
-			changeRadio(type) {
-				this.$store.commit('home/setBuyStyle', type);
-			},
+      ...mapMutations("home", ["setBuyStyle"]),
 			navToAddress(){
 				uni.navigateTo({
 					url: '/pages/mine/address/address?type='+this.point

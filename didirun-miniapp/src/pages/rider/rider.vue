@@ -52,8 +52,8 @@
         <view class="iconfont icon-arrow-right fo-28 fo-9"> </view>
       </navigator>
       <navigator
-          class="p-30 flex flex-between item-center"
-          :url="
+        class="p-30 flex flex-between item-center"
+        :url="
           provider === 'qq' ? '/pages/login/phone/phone' : '/pages/login/login'
         "
       >
@@ -89,10 +89,7 @@
     </dd-card>
 
     <dd-card margin="30rpx 0 0 0">
-      <view
-        class="p-30 flex flex-between item-center"
-        @click="changeToUser"
-      >
+      <view class="p-30 flex flex-between item-center" @click="changeToUser">
         <view class="flex flex-start item-center">
           <view class="iconfont icon-change fo-28"> </view>
           <view class="ml-30 fo-28">
@@ -106,6 +103,7 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from "vuex";
 import { $get } from "../../util/request.js";
 export default {
   data() {
@@ -120,14 +118,13 @@ export default {
     };
   },
   computed: {
-    userVersion() {
-      return this.$store.state.auth.userVersion || "user";
-    },
+    ...mapGetters(["userVersion"]),
   },
   onLoad() {
     this.getData();
   },
   methods: {
+    ...mapMutations("auth", ["setUserVersion"]),
     async getData() {
       uni.showLoading();
       const res = await $get("rider/analysis");
@@ -143,7 +140,7 @@ export default {
     },
     changeToUser() {
       const isRider = this.userVersion === "rider";
-      this.$store.commit("auth/setUserVersion", isRider ? "user" : "rider");
+      this.setUserVersion(isRider ? "user" : "rider");
       uni.reLaunch({
         url: isRider ? "/pages/index/index" : "/pages/rider/order/order",
       });

@@ -20,7 +20,7 @@
     {
       "path": "pages/login/login",
       "style": {
-        "navigationBarTitleText": "请先登录",
+        "navigationBarTitleText": "登录/注册",
         "enablePullDownRefresh": false
       }
     },

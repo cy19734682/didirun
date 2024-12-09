@@ -26,6 +26,5 @@ export default {
       uni.setStorageSync("isRider", val);
       state.isRider = val;
     },
-  },
-  actions: {},
+  }
 };

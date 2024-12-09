@@ -118,6 +118,7 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { $get, post, info } from "@/util/request.js";
 export default {
   data() {
@@ -128,20 +129,14 @@ export default {
     };
   },
   computed: {
-    userInfo() {
-      return this.$store.state.auth.userInfo || {};
-    },
-    userVersion() {
-      return this.$store.state.auth.userVersion || "user";
-    },
-    isRider() {
-      return this.$store.state.auth.isRider || false;
-    },
+    ...mapGetters(["userInfo", "userVersion", "isRider"]),
   },
   onLoad() {
     this.getCounpon();
   },
   methods: {
+    ...mapMutations("auth", ["setUserVersion"]),
+    ...mapActions("auth", ["loginOut"]),
     async getCounpon() {
       uni.showLoading({});
       const res = await $get("home/mine");
@@ -174,7 +169,7 @@ export default {
     },
     changeVersion() {
       const isRider = this.userVersion === "rider";
-      this.$store.commit("auth/setUserVersion", isRider ? "user" : "rider");
+      this.setUserVersion(isRider ? "user" : "rider");
       uni.reLaunch({
         url: isRider ? "/pages/index/index" : "/pages/rider/order/order",
       });

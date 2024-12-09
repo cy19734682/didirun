@@ -23,6 +23,7 @@
 <script>
 	import {post} from '@/util/request.js'
 	import ClassicBtn from '@/components/classic/Button/ClassicButton.vue'
+  import {mapGetters, mapMutations} from "vuex"
 	export default {
 		components: {
 			ClassicBtn
@@ -37,14 +38,16 @@
 			}
 		},
     computed: {
-      isRider() {
-        return this.$store.state.auth.userVersion === "rider";
+      ...mapGetters(["userVersion"]),
+      isRiderVersion() {
+        return this.userVersion === "rider";
       },
     },
 		beforeDestroy(){
 			this.clearIntv()
 		},
 		methods: {
+      ...mapMutations("auth", ["setUserInfo"]),
 			clearIntv(){
 				clearInterval(this.intv)
 				this.second = 60;
@@ -85,9 +88,9 @@
 				uni.hideLoading()
 				if(result.code === 200){
 					this.clearIntv();
-          this.$store.commit("auth/setUserInfo", result.data.user);
+          this.setUserInfo(result.data.user);
           uni.reLaunch({
-            url: !this.isRider
+            url: !this.isRiderVersion
                 ? "/pages/index/index"
                 : "/pages/rider/order/order",
           });

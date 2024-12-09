@@ -1,11 +1,11 @@
 <template>
-	<view  class="coupon-modal" @click="$store.commit('home/setUnreadCoupons',[])">
+	<view  class="coupon-modal" @click="setUnreadCoupons([])">
 		<view class="coupon-container">
 			<view class="coupon-title-bar">
 				恭喜获得
 			</view>
 			<view class="coupon-content">
-				<view v-for="(item,index) in coupons" :key="index" class="coupon-item">
+				<view v-for="(item,index) in unreadCoupons" :key="index" class="coupon-item">
 					<view class="dot-line">
 					</view>
 					<view class="dot dot-left">
@@ -39,13 +39,14 @@
 </template>
 
 <script>
+  import {mapGetters, mapMutations} from "vuex"
 	export default {
-		
 		computed: {
-			coupons(){
-				return this.$store.state.home.unreadCoupons
-			}
-		}
+      ...mapGetters(["unreadCoupons"]),
+		},
+    methods: {
+      ...mapMutations("home", ["setUnreadCoupons"]),
+    }
 	}
 </script>
 

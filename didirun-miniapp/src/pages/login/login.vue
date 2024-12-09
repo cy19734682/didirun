@@ -1,10 +1,6 @@
 <template>
   <view class="login-container flex flex-center item-center">
     <view class="p-30">
-      <view class="text-center fo-50" style="margin-bottom: 160rpx">
-        手机号码登录/注册
-      </view>
-      <!-- <ClassicBtn label="一键登录" width="690rpx"  /> -->
       <button
         class="login-btn"
         open-type="getPhoneNumber"
@@ -26,6 +22,7 @@
 <script>
 import ClassicBtn from "../../components/classic/Button/ClassicButton.vue";
 import { post } from "../../util/request.js";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   components: {
     ClassicBtn,
@@ -36,11 +33,13 @@ export default {
     };
   },
   computed: {
-    isRider() {
-      return this.$store.state.auth.userVersion === "rider";
+    ...mapGetters(["userVersion"]),
+    isRiderVersion() {
+      return this.userVersion === "rider";
     },
   },
   methods: {
+    ...mapMutations("auth", ["setUserInfo"]),
     redrictToPhone() {
       uni.redirectTo({
         url: "/pages/login/phone/phone",
@@ -55,9 +54,9 @@ export default {
             code,
           });
           if (result.code === 200) {
-            this.$store.commit("auth/setUserInfo", result.data);
+            this.setUserInfo(result.data);
             uni.reLaunch({
-              url: !this.isRider
+              url: !this.isRiderVersion
                 ? "/pages/index/index"
                 : "/pages/rider/order/order",
             });
@@ -69,9 +68,9 @@ export default {
             sign,
           });
           if (result.code === 200) {
-            this.$store.commit("auth/setUserInfo", result.data);
+            this.setUserInfo(result.data);
             uni.reLaunch({
-              url: !this.isRider
+              url: !this.isRiderVersion
                 ? "/pages/index/index"
                 : "/pages/rider/order/order",
             });

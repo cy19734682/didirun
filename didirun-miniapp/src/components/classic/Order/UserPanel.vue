@@ -40,8 +40,6 @@ export default {
   },
   methods: {
     async payAgent() {
-      const home = this.$store.state.home;
-      const orderTmpId = home.notice.orderTempId;
       const provider = uni.getStorageSync("provider");
       const result = await post("order/payagain", { orderNo: this.no });
       uni.hideLoading();

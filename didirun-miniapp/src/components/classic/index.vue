@@ -1,12 +1,12 @@
 <template>
 	<view>
-		<ServerTab></ServerTab>
+		<ServerTab />
 		<view class="classic-content">
-			<AddressPicker :city="city"></AddressPicker>
-			<WeightPicker></WeightPicker>
-			<Desc></Desc>
+			<AddressPicker :city="city" />
+			<WeightPicker />
+			<Desc />
 			<view class="mt-32">
-				<ClassicButton label="下一步" @click="doNext"></ClassicButton>
+				<ClassicButton label="下一步" @click="doNext" />
 			</view>
 			<MineBtn type="user" />
 		</view>
@@ -14,6 +14,7 @@
 </template>
 
 <script>
+  import { mapGetters } from "vuex";
 	import ServerTab from './ServerTab/ServerTab.vue'
 	import AddressPicker from './AddressPicker/AddressPicker.vue'
 	import WeightPicker from './WeightPicker/WeightPicker.vue'
@@ -21,9 +22,7 @@
 	import ClassicButton from './Button/ClassicButton.vue'
 	import MineBtn from './Button/MineButton.vue'
 	import {
-		HELP_DELIVER,
 		HELP_BUY,
-		HELP_GET,
 		BUY_NEARBY
 	} from '../../util/constant.js'
 	export default {
@@ -41,16 +40,19 @@
 			ClassicButton,
 			MineBtn
 		},
-		data() {
-			return {
-
-			}
-		},
+    computed: {
+      ...mapGetters([
+        "tabCurrent",
+        "buyStyle",
+        "startAddress",
+        "endAddress",
+        "desc",
+      ]),
+    },
 		methods: {
 			doNext() {
-				const home = this.$store.state.home;
-				if (!(home.tabCurrent === HELP_BUY && home.buyStyle === BUY_NEARBY)) {
-					const startAddress = home.startAddress;
+				if (!(this.tabCurrent === HELP_BUY && this.buyStyle === BUY_NEARBY)) {
+					const startAddress = this.startAddress;
 					if (!startAddress.province || !startAddress.city || !startAddress.district || !startAddress.latitude ||
 						!startAddress.longitude || !startAddress.contactName || !startAddress.mobileNumber ||
 						!startAddress.addressDetail) {
@@ -61,7 +63,7 @@
 						return;
 					}
 				}
-				const endAddress = home.endAddress;
+				const endAddress = this.endAddress;
 				if (!endAddress.province || !endAddress.city || !endAddress.district || !endAddress.latitude ||
 					!endAddress.longitude || !endAddress.contactName || !endAddress.mobileNumber ||
 					!endAddress.addressDetail) {
@@ -71,7 +73,7 @@
 					});
 					return;
 				}
-				if(!home.desc){
+				if(!this.desc){
 					uni.showToast({
 						title: '请描述您的物品',
 						icon: 'none'

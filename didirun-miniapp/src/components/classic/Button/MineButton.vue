@@ -73,9 +73,6 @@
 </script>
 
 <style lang="less">
-	.mine-btn{
-		
-	}
 	.mine-button{
 		position: fixed;
 		right: 0;

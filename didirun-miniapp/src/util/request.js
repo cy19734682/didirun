@@ -72,7 +72,7 @@ export const $get = (url, data, needNo) => {
 export const getNo = async (name) => {
   let no = uni.getStorageSync(name);
   if (!no) {
-    no = await login();
+    no = await getProviderSync();
   }
   return no;
 };
@@ -180,7 +180,7 @@ export const login = () => {
 export const info = async () => {
   const res = await $get("user/info");
   if (res.code === 200) {
-    store.commit("auth/setUserInfo", result.data.user);
+    store.commit("auth/setUserInfo", res.data);
   }
 };
 

@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { $get } from "../../../util/request.js";
+import { mapMutations } from "vuex";
 export default {
   props: {
     home: {
@@ -73,6 +73,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations("home", ["setStartAddress", "setEndAddress"]),
     navToSupply(type) {
       uni.navigateTo({
         url: `/pages/mine/address/supply/supply?type=${type}&address=${
@@ -82,9 +83,12 @@ export default {
     },
     chooseAddress(type) {
       if (this.type) {
-        const method =
-          this.type === "start" ? "home/setStartAddress" : "home/setEndAddress";
-        this.$store.commit(method, this[type]);
+        if (this.type === "start") {
+          this.setStartAddress(this[type]);
+        }
+        if (this.type === "end") {
+          this.setEndAddress(this[type]);
+        }
         uni.navigateBack({
           delta: 1,
         });

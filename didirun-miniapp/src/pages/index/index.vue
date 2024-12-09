@@ -2,7 +2,7 @@
   <view class="container">
     <!-- 经典版 -->
     <d-classic :city="city" />
-    <CouponModal v-if="coupons.length > 0" />
+    <CouponModal v-if="unreadCoupons.length > 0" />
   </view>
 </template>
 
@@ -10,6 +10,7 @@
 import DClassic from "../../components/classic/index.vue";
 import { $get, login } from "../../util/request.js";
 import CouponModal from "../../components/modal/CouponModal.vue";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   components: {
     DClassic,
@@ -22,80 +23,56 @@ export default {
     };
   },
   computed: {
-    coupons() {
-      return this.$store.state.home.unreadCoupons;
-    },
-    userVersion() {
-      return this.$store.state.auth.userVersion || "user";
-    },
+    ...mapGetters([
+      "unreadCoupons",
+      "userVersion",
+      "startAddress",
+      "endAddress",
+      "share",
+    ]),
   },
   onShow() {
     if (uni.getStorageSync("userInfo")) {
-      this.$store.dispatch("home/getUnreadCoupons");
+      this.getUnreadCoupons()
     }
     if (!this.isLoad) {
       return;
     }
     const city = uni.getStorageSync("currentCity");
-    const home = this.$store.state.home;
-    if (home.startAddress.city && home.startAddress.city !== city) {
-      this.$store.commit("home/setStartAddress", {});
+    if (this.startAddress?.city !== city) {
+      this.setStartAddress({});
     }
-    if (home.endAddress.city && home.endAddress.city !== city) {
-      this.$store.commit("home/setEndAddress", {});
+    if (this.endAddress?.city !== city) {
+      this.setEndAddress({});
     }
     if (this.city !== city) {
       this.getCityData(city);
     }
     this.city = city;
   },
-    onShareTimeline(res) {
-  	 //分享到朋友圈 by cckk263 
-   const obj = {
-      title: "智速送达",
-      path: "/pages/index/index",
+  onShareTimeline(res) {
+    //分享到朋友圈
+    return {
+      title: this.share.title || "智速送达",
+      desc: this.share.desc || "",
+      path: this.share.path || "/pages/index/index",
+      imageUrl: this.share.imageUrl || "",
     };
-    const share = this.$store.state.home.share;
-    if (share.title) {
-      obj.title = share.title;
-    }
-    if (share.desc) {
-      obj.desc = share.desc;
-    }
-    if (share.path) {
-      obj.path = share.path;
-    }
-    if (share.imageUrl) {
-      obj.imageUrl = share.imageUrl;
-    }
-    return obj;
   },
   onShareAppMessage() {
-    const obj = {
-      title: "智速送达",
-      path: "/pages/index/index",
+    return {
+      title: this.share.title || "智速送达",
+      desc: this.share.desc || "",
+      path: this.share.path || "/pages/index/index",
+      imageUrl: this.share.imageUrl || "",
     };
-    const share = this.$store.state.home.share;
-    if (share.title) {
-      obj.title = share.title;
-    }
-    if (share.desc) {
-      obj.desc = share.desc;
-    }
-    if (share.path) {
-      obj.path = share.path;
-    }
-    if (share.imageUrl) {
-      obj.imageUrl = share.imageUrl;
-    }
-    return obj;
   },
   async onLoad() {
     // #ifdef MP-WEIXIN
-    if(wx.hideHomeButton){
+    if (wx.hideHomeButton) {
       await wx.hideHomeButton();
     }
-    if(wx.canIUse('hideHomeButton')) {
+    if (wx.canIUse("hideHomeButton")) {
       await wx.hideHomeButton();
     }
     // #endif
@@ -119,18 +96,18 @@ export default {
           if (result.code === 200) {
             this.city = result.data.address.city;
             uni.setStorageSync("currentCity", result.data.address.city);
-            this.$store.commit("home/setCityNo", result.data.cityNo);
-            this.$store.commit("home/setWeights", result.data.weights);
-            this.$store.commit("home/setTags", result.data.tags);
-            this.$store.commit("home/setDefaultAddress", result.data.address);
-            this.$store.commit("home/setIsOp", true);
+            this.setCityNo(result.data.cityNo);
+            this.setWeights(result.data.weights);
+            this.setTags(result.data.tags);
+            this.setDefaultAddress(result.data.address);
+            this.setIsOp(true);
           } else {
-            this.$store.commit("home/setIsOp", false);
+            this.setIsOp(false);
             this.city = result.data.cityName;
             uni.setStorageSync("currentCity", result.data.cityName);
           }
         } else if (uni.getStorageSync("currentCity")) {
-          this.getCityData(uni.getStorageSync("currentCity"));
+          await this.getCityData(uni.getStorageSync("currentCity"));
         } else {
           uni.navigateTo({
             url: "/pages/mine/address/city/city?type=home",
@@ -141,6 +118,16 @@ export default {
     });
   },
   methods: {
+    ...mapMutations("home", [
+      "setCityNo",
+      "setWeights",
+      "setTags",
+      "setDefaultAddress",
+      "setIsOp",
+      "setStartAddress",
+      "setEndAddress",
+    ]),
+    ...mapActions("home", ["getUnreadCoupons"]),
     async getCityData(keyword) {
       uni.showLoading();
       const result = await $get("home/city", {
@@ -149,12 +136,12 @@ export default {
       uni.hideLoading();
       if (result.code === 200) {
         uni.setStorageSync("currentCity", result.data.cityName);
-        this.$store.commit("home/setCityNo", result.data.cityNo);
-        this.$store.commit("home/setWeights", result.data.weights);
-        this.$store.commit("home/setTags", result.data.tags);
-        this.$store.commit("home/setIsOp", true);
+        this.setCityNo(result.data.cityNo);
+        this.setWeights(result.data.weights);
+        this.setTags(result.data.tags);
+        this.setIsOp(true);
       } else {
-        this.$store.commit("home/setIsOp", false);
+        this.setIsOp(false);
       }
     },
   },

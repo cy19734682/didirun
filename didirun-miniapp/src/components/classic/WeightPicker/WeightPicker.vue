@@ -1,5 +1,5 @@
 <template>
-	<picker class="mt-32" @change="bindPickerChange" :value="weightCurrent" range-key="label" :range="weights">
+	<picker class="mt-32" @change="bindPickerChange" :value="weightCurrentT" range-key="label" :range="weights">
 		<dd-card padding="30rpx" width="626rpx" >
 			<view class="flex flex-between item-center weight-picker">
 				<view class="flex flex-start item-center">
@@ -10,7 +10,7 @@
 				</view>
 				<view class="flex flex-end item-center">
 					<view class="fo-28 fo-9">
-						{{weights.length>0? weights[weightCurrent].label : '暂无选项'}}
+						{{weights.length>0? weights[weightCurrentT].label : '暂无选项'}}
 					</view>
 					<view class="fo-28 fo-9 iconfont icon-arrow-right ml-16"></view>
 				</view>
@@ -20,19 +20,13 @@
 </template>
 
 <script>
-	import { mapMutations, mapState } from 'vuex'
+  import {mapGetters, mapMutations} from 'vuex'
 	export default {
-		data() {
-			return {
-			}
-		},
 		computed: {
-			weights(){
-				return this.$store.state.home.weights
-			},
-			weightCurrent: {
+      ...mapGetters(["weights",'weightCurrent']),
+			weightCurrentT: {
 				get() {
-					return this.$store.state.home.weightCurrent
+					return this.weightCurrent
 				},
 				set(val){
 					this.setWeightCurrent(val)
@@ -42,7 +36,7 @@
 		methods: {
 			...mapMutations('home',['setWeightCurrent']),
 			bindPickerChange(e){
-				this.weightCurrent = e.detail.value
+				this.weightCurrentT = e.detail.value
 			}
 		}
 	}

@@ -89,10 +89,14 @@
 		post,
 		$get
 	} from '@/util/request.js'
+  import {mapGetters} from "vuex"
 	export default {
 		components: {
 			ClassicButton
 		},
+    computed:{
+      ...mapGetters(["notice"]),
+    },
 		data() {
 			return {
 				realname: '',
@@ -196,7 +200,7 @@
 					return
 				}
 				uni.requestSubscribeMessage({
-					tmplIds: [this.$store.state.home.notice.verifyTempId],
+					tmplIds: [this.notice.verifyTempId],
 					complete: async () => {
 						uni.showLoading()
 						const res = await post('rider/register', {
