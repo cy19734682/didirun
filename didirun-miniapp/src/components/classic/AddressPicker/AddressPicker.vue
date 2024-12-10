@@ -56,7 +56,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["startAddress", "endAddress", "tabCurrent", "isOp"]),
+    ...mapGetters([
+      "userInfo",
+      "startAddress",
+      "endAddress",
+      "tabCurrent",
+      "isOp",
+    ]),
   },
   methods: {
     navToCity() {
@@ -71,7 +77,7 @@ export default {
       this.navTo("end");
     },
     navTo(type) {
-      if (!uni.getStorageSync("userInfo")) {
+      if (this.userInfo?.mobileNumber) {
         wx.navigateTo({
           url:
             this.provider === "qq"

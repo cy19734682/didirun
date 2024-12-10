@@ -83,7 +83,7 @@ export class WxappController extends BaseController {
         openid: res.openid,
         wxappNo,
       });
-      return this.responseSuccess('ok', wxappNo);
+      return this.responseSuccess('ok', { wxappNo });
     }
     if (findRes.userNo) {
       const user: UserEntity & { isRider?: boolean } =

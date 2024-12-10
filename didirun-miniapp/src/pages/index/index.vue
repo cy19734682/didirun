@@ -24,6 +24,7 @@ export default {
   },
   computed: {
     ...mapGetters([
+      "userInfo",
       "unreadCoupons",
       "userVersion",
       "startAddress",
@@ -32,7 +33,7 @@ export default {
     ]),
   },
   onShow() {
-    if (uni.getStorageSync("userInfo")) {
+    if (this.userInfo?.mobileNumber) {
       this.getUnreadCoupons()
     }
     if (!this.isLoad) {

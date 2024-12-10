@@ -32,7 +32,7 @@
         <view class="fo-28 fo-28"> 优惠券{{ coupon }}张 </view>
       </navigator>
       <navigator class="panel-item flex flex-center item-center">
-        <view class="fo-28 fo-28"> 积分 {{ intergral }} </view>
+        <view class="fo-28 fo-28"> 积分 {{ integral }} </view>
       </navigator>
     </view>
     <dd-card>
@@ -49,17 +49,6 @@
     </dd-card>
 
     <dd-card margin="30rpx 0 0 0">
-      <!-- <navigator class="p-30 flex flex-between item-center border-b-none" url="/pages/order/order">
-				<view class="flex flex-start item-center">
-					<view class="iconfont icon-share fo-28">
-					</view>
-					<view class="ml-30 fo-28">
-						邀请有礼
-					</view>
-				</view>
-				<view class="iconfont icon-arrow-right fo-28 fo-9">
-				</view>
-			</navigator> -->
       <navigator
         class="p-30 flex flex-between item-center border-b-none"
         url="/pages/text/text?type=user"
@@ -118,13 +107,13 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import { $get, post, info } from "@/util/request.js";
 export default {
   data() {
     return {
       coupon: 0, //优惠券
-      intergral: 0, //积分
+      integral: 0, //积分
       provider: uni.getStorageSync("provider"),
     };
   },
@@ -132,17 +121,16 @@ export default {
     ...mapGetters(["userInfo", "userVersion", "isRider"]),
   },
   onLoad() {
-    this.getCounpon();
+    this.getCoupon();
   },
   methods: {
     ...mapMutations("auth", ["setUserVersion"]),
-    ...mapActions("auth", ["loginOut"]),
-    async getCounpon() {
+    async getCoupon() {
       uni.showLoading({});
       const res = await $get("home/mine");
       uni.hideLoading();
       if (res.code === 200) {
-        this.intergral = res.data.intergralCount;
+        this.integral = res.data.intergralCount;
         this.coupon = res.data.couponCount;
       }
     },
@@ -161,7 +149,6 @@ export default {
             });
             if (res.code === 200) {
               await info();
-              this.getUserInfo();
             }
           }
         },

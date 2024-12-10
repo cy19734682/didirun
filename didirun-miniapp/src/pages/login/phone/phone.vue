@@ -1,7 +1,7 @@
 <template>
 	<view class="p-30">
 		<view class="fo-50">请输入手机号码</view>
-		<view class="fo-9 fo-28 mt-12 pb-30">为了方便联系，请输入您的常用手机号码</view>
+		<view class="fo-9 fo-28 mt-12 pb-30">若您的手机号未注册，将为您自动注册</view>
 
 		<input v-model="phoneNumber" class="fo-40 border-b mt-30 h-100" maxlength="11" type="number"
 			placeholder="输入11位手机号码"></input>
@@ -13,7 +13,7 @@
 		</view>
 
 		<view class="py-30 mt-30">
-			<ClassicBtn label="登录 / 注册" @click="submit()" />
+			<ClassicBtn label="授权登录" @click="submit()" />
 		</view>
 
 		

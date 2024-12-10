@@ -21,21 +21,35 @@ export const request = async (url, data, method, needNo = true) => {
       header,
       complete: (res) => {
         if (res.statusCode === 200) {
+          if (res.data.code === 203) {
+            uni.showModal({
+              title: "温馨提示",
+              content: "您还未登录，请先登录！",
+              confirmText: "去登录",
+              cancelText: "再逛逛",
+              success: function (res) {
+                if (res.confirm) {
+                  const provider = uni.getStorageSync("provider");
+                  uni.navigateTo({
+                    url:
+                      provider === "qq"
+                        ? "/pages/login/phone/phone"
+                        : "/pages/login/login",
+                  });
+                } else if (res.cancel) {
+                  uni.navigateBack({
+                    delta: 1,
+                  });
+                }
+              },
+            });
+            return;
+          }
           if (res.data.code !== 200) {
             uni.showToast({
               icon: "none",
               title: res.data.msg,
             });
-          }
-          if (res.data.code === 203) {
-            const provider = uni.getStorageSync("provider");
-            uni.navigateTo({
-              url:
-                provider === "qq"
-                  ? "/pages/login/phone/phone"
-                  : "/pages/login/login",
-            });
-            return;
           }
           resolve(res.data);
         } else {
